@@ -1,11 +1,7 @@
 package main.Boards;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Polygon;
-
-import javax.swing.JPanel;
+import java.awt.*;
+import javax.swing.*;
 
 public class HexBoard extends JPanel {
 	private int boardSize = 11;
