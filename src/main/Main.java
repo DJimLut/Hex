@@ -1,3 +1,13 @@
+/*
+ * David Jimenez
+ * Dylan Williams
+ * Jay Coughlin
+ * Mason Richardson
+ * 
+ * CSC445: Computer Algorithms
+ * Final Project: Hex
+ */
+
 package main;
 
 import javax.swing.JFrame;
@@ -14,3 +24,8 @@ public class Main {
 		frame.setVisible(true);
 	}
 }
+
+/*
+ * TODO's:
+ * 	
+ */
