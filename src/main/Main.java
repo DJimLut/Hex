@@ -27,5 +27,11 @@ public class Main {
 
 /*
  * TODO's:
- * 	
+ * 	- Edit starting GUI
+ * 	- Implement winning paths
+ * 	- Color Hex tiles when selected with legality
+ * 	- Allow Replay/Reset
+ * 	- Add CPU for Computer-VS-Human Mode
+ * 	- Track turns
+ * 	- Make it *pretty*
  */
