@@ -1,7 +1,7 @@
 /*
  * David Jimenez
  * Dylan Williams
- * Jay Coughlin
+ * Jay Coughlon
  * Mason Richardson
  * 
  * CSC445: Computer Algorithms
