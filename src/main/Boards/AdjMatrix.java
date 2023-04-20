@@ -40,7 +40,7 @@ public class AdjMatrix {
 	      data.mult(m2.getData(), retMatrix);
 	      return new AdjMatrix(retMatrix);
 	    } else
-	      return null;
+	      throw new UnsupportedOperationException("Cannot perform this function on different sized adjacency matrixes");
 	  }
 
 	  public void write(int a, int b, int value) {
@@ -50,7 +50,7 @@ public class AdjMatrix {
 	  }
 
 	  public int read(int x, int y) {
-	    return (int) data.get(x, y);
+		return (int) data.get(x, y);
 	  }
 
 	  public void wipeNode(int nodeId) {
