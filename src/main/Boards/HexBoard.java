@@ -143,15 +143,11 @@ public class HexBoard extends JPanel {
 	}
 
 	public void playAt(int x, int y){
-		if ((!isLegalPlay(x, y) && turn == playerTurn)) {
+		if ((!isLegalPlay(x, y) && turn == playerTurn) || (!isLegalPlay(x, y) && turn == p2Turn)) {
 			JOptionPane.showMessageDialog(null, "Illegal Move! Play at another Location", "Invalid move!", JOptionPane.PLAIN_MESSAGE);
 			return;
 		}
-		
-		else if (!isLegalPlay(x, y) && turn == p2Turn) {
-			JOptionPane.showMessageDialog(null, "Illegal Move! Play at another Location", "Invalid move!", JOptionPane.PLAIN_MESSAGE);
-			return;
-		}
+
 		// AI picks a hex space already occupied
 		while(board[y][x] != 0){
 			x = rand.nextInt(11);
