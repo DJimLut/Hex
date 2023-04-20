@@ -16,8 +16,10 @@ public class HexBoard extends JPanel {
 	private final Color[] colors={Color.WHITE, Color.RED, Color.BLUE};
 	private int turn = 1;
 	private int playerTurn = 1;
-	private int color = 1;
+	private int p2Turn = 2;
+	private int color = 0;
 	private int numPlayers = 1;
+	private int winCounter = 0;
 	private Random rand = new Random();
 	
 	private BoardData data;
@@ -28,13 +30,20 @@ public class HexBoard extends JPanel {
 		hexagons = new Polygon[11][11];
 		String[] colorOpts={"Red", "Blue"};
 		String[] playerOpts={"Friend","AI"};
-		color=JOptionPane.showOptionDialog(null, "Which colour would you like to play as?", "Choose Color", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, colorOpts, colorOpts[0]);
-		numPlayers = color=JOptionPane.showOptionDialog(null, "Would you like to play against a Friend or an AI?", "Choose players", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playerOpts, playerOpts[0]);
-
+		numPlayers = JOptionPane.showOptionDialog(null, "Would you like to play against a Friend or an AI?", "Choose players", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playerOpts, playerOpts[0]);
+		if(numPlayers == 1){
+			color=JOptionPane.showOptionDialog(null, "Which color would you like to play as?", "Choose Color", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, colorOpts, colorOpts[0]);
+		}
+	
 		// Set player Color and Turn correctly
 		if(color == 1){
-			turn = 2;
 			playerTurn = 2;
+		}
+		if(numPlayers ==1){
+			p2Turn = -1;
+		}
+		if(numPlayers == 1 && playerTurn == 2){
+			playAt(rand.nextInt(11), rand.nextInt(11));
 		}
 
 	}
@@ -134,13 +143,15 @@ public class HexBoard extends JPanel {
 	}
 
 	public void playAt(int x, int y){
-		if (!isLegalPlay(x, y) && turn == playerTurn) {
-			System.out.println("Turn: " + turn);
-			System.out.println("playerTurn: " + playerTurn);
+		if ((!isLegalPlay(x, y) && turn == playerTurn)) {
 			JOptionPane.showMessageDialog(null, "Illegal Move! Play at another Location", "Invalid move!", JOptionPane.PLAIN_MESSAGE);
 			return;
 		}
-
+		
+		else if (!isLegalPlay(x, y) && turn == p2Turn) {
+			JOptionPane.showMessageDialog(null, "Illegal Move! Play at another Location", "Invalid move!", JOptionPane.PLAIN_MESSAGE);
+			return;
+		}
 		// AI picks a hex space already occupied
 		while(board[y][x] != 0){
 			x = rand.nextInt(11);
@@ -158,6 +169,7 @@ public class HexBoard extends JPanel {
 			turn++;
 			repaint();
 		}
+		winCounter++;
 	}
 
 	// Checks if space is already taken
@@ -169,6 +181,7 @@ public class HexBoard extends JPanel {
 		public void mousePressed(MouseEvent e) {
 			int eX=e.getX();
 			int eY=e.getY();
+			
 
 			// User chooses to play against a friend
 			if(numPlayers == 0){
@@ -187,9 +200,13 @@ public class HexBoard extends JPanel {
 					for (int x=0; x<hexagons[y].length; x++) {
 						if (hexagons[y][x].contains(eX, eY)) {
 							playAt(y, x);
-							
 						}
 					}
+				}
+				// Should never get to this board but program will run infintely if
+				// not specified to quit if all pieces filled in. 
+				if(winCounter == 121){
+					System.exit(0);
 				}
 				if(turn != playerTurn){
 					playAt(rand.nextInt(11), rand.nextInt(11));
