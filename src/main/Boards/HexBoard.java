@@ -1,17 +1,42 @@
 package main.Boards;
 
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Random;
 
 public class HexBoard extends JPanel {
 	private int boardSize = 11;
 	private double sm;
 	private double lg;
+	private int[][] board;
+	private Polygon[][] hexagons;
+	private final Color[] colors={Color.WHITE, Color.RED, Color.BLUE};
+	private int turn = 1;
+	private int playerTurn = 1;
+	private int color = 1;
+	private int numPlayers = 1;
+	private Random rand = new Random();
 	
 	private BoardData data;
 	
 	public HexBoard() {
-		
+		addMouseListener(new Mouse());
+		board=new int[11][11];
+		hexagons = new Polygon[11][11];
+		String[] colorOpts={"Red", "Blue"};
+		String[] playerOpts={"Friend","AI"};
+		color=JOptionPane.showOptionDialog(null, "Which colour would you like to play as?", "Choose Color", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, colorOpts, colorOpts[0]);
+		numPlayers = color=JOptionPane.showOptionDialog(null, "Would you like to play against a Friend or an AI?", "Choose players", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playerOpts, playerOpts[0]);
+
+		// Set player Color and Turn correctly
+		if(color == 1){
+			turn = 2;
+			playerTurn = 2;
+		}
+
 	}
 	
 	public HexBoard(BoardData d) {
@@ -33,9 +58,12 @@ public class HexBoard extends JPanel {
 		
 		for (int y = 0; y < boardSize; y++) {
 			for (int x = 0; x < boardSize; x++) {
+				hexagons[x][y] = calcHexPoly(x, y);
 				drawHex(g2d, x, y, 1);
 			}
 		}
+
+		
 	}
 	
 	public void drawHex(Graphics2D g, int column, int row, int color) {
@@ -102,8 +130,71 @@ public class HexBoard extends JPanel {
 	}
 	
 	public Color getFillColor(int x, int y) {
-	    Color defaultColor = Color.WHITE;
-	    return defaultColor;
+		return colors[board[y][x]];
 	}
 
+	public void playAt(int x, int y){
+		if (!isLegalPlay(x, y) && turn == playerTurn) {
+			System.out.println("Turn: " + turn);
+			System.out.println("playerTurn: " + playerTurn);
+			JOptionPane.showMessageDialog(null, "Illegal Move! Play at another Location", "Invalid move!", JOptionPane.PLAIN_MESSAGE);
+			return;
+		}
+
+		// AI picks a hex space already occupied
+		while(board[y][x] != 0){
+			x = rand.nextInt(11);
+			y = rand.nextInt(11);
+		}
+
+		board[y][x]=turn;
+		repaint();
+
+
+		if (turn==2) {
+			turn--;
+			repaint();
+		} else {
+			turn++;
+			repaint();
+		}
+	}
+
+	// Checks if space is already taken
+	private boolean isLegalPlay(int x, int y) {
+		return board[y][x]==0;
+	}
+
+	private class Mouse extends MouseAdapter {
+		public void mousePressed(MouseEvent e) {
+			int eX=e.getX();
+			int eY=e.getY();
+
+			// User chooses to play against a friend
+			if(numPlayers == 0){
+				for (int y=0; y<hexagons.length; y++) {
+					for (int x=0; x<hexagons[y].length; x++) {
+						if (hexagons[y][x].contains(eX, eY)) {
+							playAt(y, x);
+						}
+					}
+				}
+			}
+
+			// User chooses to play Against AI
+			if(numPlayers == 1){
+				for (int y=0; y<hexagons.length; y++) {
+					for (int x=0; x<hexagons[y].length; x++) {
+						if (hexagons[y][x].contains(eX, eY)) {
+							playAt(y, x);
+							
+						}
+					}
+				}
+				if(turn != playerTurn){
+					playAt(rand.nextInt(11), rand.nextInt(11));
+				}
+			}
+		}
+	}
 }
