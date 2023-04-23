@@ -6,10 +6,13 @@
 package main.Boards;
 import main.GraphicalComponents.*;
 import main.LogicalComponents.Move;
+import main.Players.Player;
 
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import javax.naming.OperationNotSupportedException;
 
 public class BoardData {
 	private final int RED_BORDER1 = 0;
@@ -107,40 +110,37 @@ public class BoardData {
 		return neighbors;
 	}
 	
-	private ArrayList<Integer> getAdjMatrixNeighbors(int node, int color) {
+	private ArrayList<Integer> getAdjMatrixNeighbors(int node, Player player) {
 	    ArrayList<Integer> neighbours = new ArrayList<Integer>();
 	    AdjMatrix adjMatrix = null;
-	    switch (color) {
-	    	case 1:
+		
+	    switch (player) {
+	    	case RED:
 	    		adjMatrix = redAdjMatrix;
 	    		break;
-	    	case 2:
+	    	case BLUE:
 	    		adjMatrix = blueAdjMatrix;
 	    		break;
 	    }
 
-	    for (int i = 0; i < adjMatrix.size(); i++)
-	    	if (i != node && adjMatrix.read(node, i) == AdjMatrix.LINK)
+	    for (int i = 0; i < adjMatrix.size(); i++) {
+	    	if (i != node && adjMatrix.read(node, i) == AdjMatrix.LINK) {
 	    		neighbours.add(i);
-	    return neighbours;
+			}
+		}
 
+	    return neighbours;
 	}
 	
-	public AdjMatrix getAdjMatrix(int color) {
-	    AdjMatrix returnVal;
-	    switch (color) {
-	      case 1:
-	        returnVal = redAdjMatrix.clone();
-	        break;
-	      case 2:
-	        returnVal = blueAdjMatrix.clone();
-	        break;
+	public AdjMatrix getAdjMatrix(Player player) {
+	    switch (player) {
+	      case RED:
+	        return redAdjMatrix.clone();
+	      case BLUE:
+	        return blueAdjMatrix.clone();
 	      default:
-	        System.err.println("incorrect color");
-	        returnVal = null;
-	        break;
+	        throw new UnsupportedOperationException("Incorrect Color.");
 	    }
-	    return returnVal;
 	  }
 	
 	public boolean makeMove(Move move) {
@@ -148,7 +148,7 @@ public class BoardData {
 		return false;
 	}
 	
-	public ArrayList<Integer> getPath(int start, int target, int color) {
+	public ArrayList<Integer> getPath(int start, int target, Player player) {
 		ArrayList<Integer> tree = new ArrayList<Integer>();
 		ArrayList<Integer> parentIndex = new ArrayList<Integer>();
 		boolean done = false;
@@ -160,7 +160,7 @@ public class BoardData {
 			if (node == target)
 				done = true;
 			else {
-				ArrayList<Integer> newChildren = getAdjMatrixNeighbors(node, color);
+				ArrayList<Integer> newChildren = getAdjMatrixNeighbors(node, player);
 				Collections.shuffle(newChildren);
 				for (int child : newChildren) {
 					if (!tree.contains(child)) {
@@ -187,24 +187,24 @@ public class BoardData {
 		return path;
 	}
 	
-	public ArrayList<Point> getWinningPath(int color) {
+	public ArrayList<Point> getWinningPath(Player player) {
 		ArrayList<Integer> nodePath;
 		ArrayList<Point> winningPath = new ArrayList<Point>();
 		int borderA = 0;
 		int borderB = 0;
 		
-		switch (color) {
-		case 1:
+		switch (player) {
+		case RED:
 			borderA = RED_BORDER1;
 			borderB = RED_BORDER2;
 			break;
-		case 2:
+		case BLUE:
 			borderA = BLUE_BORDER1;
 			borderB = BLUE_BORDER2;
 			break;
 		}
 		
-		nodePath = getPath(borderA, borderB, color);
+		nodePath = getPath(borderA, borderB, player);
 		
 		for (int node : nodePath) {
 			Point xy = getXYpos(node);
@@ -226,22 +226,15 @@ public class BoardData {
 		}
 	}
 	
-	public boolean checkWin(int player) {
-		boolean returnVal = false;
+	public boolean checkWin(Player player) throws OperationNotSupportedException {
 		switch (player) {
-		case 1:
-			if (redAdjMatrix.read(RED_BORDER1,  RED_BORDER2) == AdjMatrix.LINK)
-				returnVal = true;
-			break;
-		case 2:
-			if (blueAdjMatrix.read(BLUE_BORDER1,  BLUE_BORDER2) == AdjMatrix.LINK)
-				returnVal = true;
-			break;
-		default:
-			System.err.println("incorrect color");
-			break;
+			case RED:
+				return redAdjMatrix.read(RED_BORDER1,  RED_BORDER2) == AdjMatrix.LINK;
+			case BLUE:
+				return blueAdjMatrix.read(BLUE_BORDER1,  BLUE_BORDER2) == AdjMatrix.LINK;
+			default:
+				throw new OperationNotSupportedException("Incorrect Color.");
 		}
-		return returnVal;
 	}
 	
 	public HexNode getNode(int x, int y) {
