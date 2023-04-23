@@ -4,10 +4,10 @@
 //connected to graphical components through the GameRunner class.
 
 package main.Boards;
+import main.GraphicalComponents.*;
+import main.LogicalComponents.Move;
 
-import java.awt.Color;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -41,12 +41,9 @@ public class BoardData {
 	  }
 	
 	public void initBoard() {
-		int nodeIndex = 4;
-		
 		for (int row = 0; row < SIZE; row++) {
 			for (int column = 0; column < SIZE; column++) {
-				board[column][row].setValue(nodeIndex);
-				nodeIndex++;
+				board[column][row].setColor(Node.WHITE);
 			}
 		}
 	}
@@ -251,16 +248,16 @@ public class BoardData {
 		return board[x][y];
 	}
 	
-	public void set(int x, int y, int value) {
+	public void set(int x, int y, Node color) {
 		int node = board[x][y].getNodeID();
-		board[x][y].setValue(value);
+		board[x][y].setColor(color);
 		
-		switch (value) {
-		case 1:
+		switch (color) {
+		case RED:
 			redAdjMatrix.bypassAndRemoveNode(node);
 			blueAdjMatrix.wipeNode(node);
 			break;
-		case 2:
+		case BLUE:
 			redAdjMatrix.wipeNode(node);
 			blueAdjMatrix.bypassAndRemoveNode(node);
 			break;
