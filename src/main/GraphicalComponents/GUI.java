@@ -7,10 +7,9 @@ import main.Boards.*;
 
 public class GUI extends JFrame implements ActionListener {
 	private JPanel gameSettings;
-	private HexBoard activeGameBoard;	
-	private JButton startButton = new JButton("Start Game");	
-	
+	private HexBoard activeGameBoard;
 	private GameRunner runner;
+	private JButton startButton = new JButton("Start Game");
 	
 	public GUI() {
 		gameSettings = new JPanel();
