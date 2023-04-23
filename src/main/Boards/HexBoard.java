@@ -1,13 +1,11 @@
 package main.Boards;
 
-import javax.swing.*;
+import main.GraphicalComponents.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import javax.swing.*;
 import java.util.Random;
 
-public class HexBoard extends JPanel {
+public class HexBoard extends JPanel implements IBoard {
 	private int boardSize = 11;
 	private double sm;
 	private double lg;
@@ -25,7 +23,7 @@ public class HexBoard extends JPanel {
 	private BoardData data;
 	
 	public HexBoard() {
-		addMouseListener(new Mouse());
+		addMouseListener(new Mouse(this));
 		board=new int[11][11];
 		hexagons = new Polygon[11][11];
 		String[] colorOpts={"Red", "Blue"};
@@ -68,14 +66,12 @@ public class HexBoard extends JPanel {
 		for (int y = 0; y < boardSize; y++) {
 			for (int x = 0; x < boardSize; x++) {
 				hexagons[x][y] = calcHexPoly(x, y);
-				drawHex(g2d, x, y, 1);
+				drawHex(g2d, x, y);
 			}
-		}
-
-		
+		}		
 	}
 	
-	public void drawHex(Graphics2D g, int column, int row, int color) {
+	public void drawHex(Graphics2D g, int column, int row) {
 		Polygon polygon = calcHexPoly(column, row);
 	    g.setPaint(getFillColor(column, row));
 	    g.fill(polygon);
@@ -143,8 +139,7 @@ public class HexBoard extends JPanel {
 	}
 
 	public void playAt(int x, int y){
-		if ((!isLegalPlay(x, y) && turn == playerTurn) || (!isLegalPlay(x, y) && turn == p2Turn)) {
-			JOptionPane.showMessageDialog(null, "Illegal Move! Play at another Location", "Invalid move!", JOptionPane.PLAIN_MESSAGE);
+		if (!isLegalPlay(x, y) && turn == playerTurn) {
 			return;
 		}
 
@@ -168,46 +163,29 @@ public class HexBoard extends JPanel {
 		winCounter++;
 	}
 
-	// Checks if space is already taken
-	private boolean isLegalPlay(int x, int y) {
-		return board[y][x]==0;
-	}
-
-	private class Mouse extends MouseAdapter {
-		public void mousePressed(MouseEvent e) {
-			int eX=e.getX();
-			int eY=e.getY();
-			
-
-			// User chooses to play against a friend
-			if(numPlayers == 0){
-				for (int y=0; y<hexagons.length; y++) {
-					for (int x=0; x<hexagons[y].length; x++) {
-						if (hexagons[y][x].contains(eX, eY)) {
-							playAt(y, x);
-						}
-					}
-				}
-			}
-
-			// User chooses to play Against AI
-			if(numPlayers == 1){
-				for (int y=0; y<hexagons.length; y++) {
-					for (int x=0; x<hexagons[y].length; x++) {
-						if (hexagons[y][x].contains(eX, eY)) {
-							playAt(y, x);
-						}
-					}
-				}
-				// Should never get to this board but program will run infintely if
-				// not specified to quit if all pieces filled in. 
-				if(winCounter == 121){
-					System.exit(0);
-				}
-				if(turn != playerTurn){
-					playAt(rand.nextInt(11), rand.nextInt(11));
+	public void update(int x, int y) {
+		for (int column = 0; column < hexagons.length; column++) {
+			for (int row = 0; row < hexagons[column].length; row++) {
+				if (hexagons[column][row].contains(x, y)) {
+					playAt(column, row);
 				}
 			}
 		}
+
+		// If playing against AI and isn't player turn
+		if(numPlayers == 1 && turn != playerTurn){
+			playAt(rand.nextInt(11), rand.nextInt(11));
+		}
+
+		// Should never get to this board but program will run infintely if
+		// not specified to quit if all pieces filled in. 
+		if(winCounter == 121){
+			System.exit(0);
+		}
+	}
+
+	// Checks if space is already taken
+	private boolean isLegalPlay(int x, int y) {
+		return board[y][x]==0;
 	}
 }
