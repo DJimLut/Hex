@@ -3,22 +3,19 @@
 //locate a specific tile in the graph. It's based on the HexLocation
 //class of the Trevorah project.
 
-package main.Boards;
+package main.GraphicalComponents;
 
-public class HexNode {
-	
+public class HexNode {	
 	private int nodeID;
-	private int value;
-	//For red player, node value = 1; Blue player = 2.
+	private Node color = Node.WHITE;
 	
 	public HexNode(int nodeID) {
 		this.nodeID = nodeID;
-		this.value = 0;
 	}
 	
-	public HexNode(int nodeID, int value) {
+	public HexNode(int nodeID, Node color) {
 		this.nodeID = nodeID;
-		this.value = value;
+		this.color = color;
 	}
 	
 	public int getNodeID() {
@@ -29,12 +26,12 @@ public class HexNode {
 		this.nodeID = nodeID;
 	}
 	
-	public int getValue() {
-		return value;
+	public Node getColor() {
+		return color;
 	}
 	
-	public void setValue(int value) {
-		this.value = value;
+	public void setColor(Node color) {
+		this.color = color;
 	}	
 
 }
