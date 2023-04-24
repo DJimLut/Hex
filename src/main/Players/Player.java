@@ -1,5 +1,6 @@
 package main.Players;
 
-public class Player {
-
+public enum Player {
+    RED,
+    BLUE
 }
