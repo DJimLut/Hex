@@ -47,8 +47,10 @@ public class HexBoard extends JPanel implements IBoard {
 		playerTurn = 1;
 		p2Turn = 2;
 		numPlayers = JOptionPane.showOptionDialog(null, "Would you like to play against a Friend or an AI?", "Choose players", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playerOpts, playerOpts[0]);
+		sfx.playButtonClick();
 		if(numPlayers == 1){
 			color=JOptionPane.showOptionDialog(null, "Which color would you like to play as?", "Choose Color", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, colorOpts, colorOpts[0]);
+			sfx.playButtonClick();
 		}
 	
 		// Set player Color and Turn correctly
