@@ -6,7 +6,6 @@
 package main.Boards;
 
 import main.GraphicalComponents.*;
-import main.LogicalComponents.Move;
 import main.Players.Player;
 
 import java.awt.Point;
@@ -145,11 +144,6 @@ public class BoardData {
 	        throw new UnsupportedOperationException("Incorrect Color.");
 	    }
 	  }
-	
-	public boolean makeMove(Move move) {
-		//TODO: Write method for a valid move on the board.
-		return false;
-	}
 	
 	public ArrayList<Integer> getPath(int start, int target, Player player) {
 		ArrayList<Integer> tree = new ArrayList<Integer>();
