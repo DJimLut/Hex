@@ -1,8 +1,15 @@
 package main.Boards;
 
 import main.GraphicalComponents.*;
+import main.Players.Player;
+
 import java.awt.*;
+import java.awt.MultipleGradientPaint.ColorSpaceType;
+
+import javax.naming.OperationNotSupportedException;
 import javax.swing.*;
+
+import java.util.Arrays;
 import java.util.Random;
 
 public class HexBoard extends JPanel implements IBoard {
@@ -12,13 +19,18 @@ public class HexBoard extends JPanel implements IBoard {
 	private int[][] board;
 	private Polygon[][] hexagons;
 	private final Color[] colors={Color.WHITE, Color.RED, Color.BLUE};
-	private int turn = 1;
-	private int playerTurn = 1;
-	private int p2Turn = 2;
-	private int color = 0;
+	private String[] playAgain={"Yes", "No"};
+	private String[] colorOpts={"Red", "Blue"};
+	private String[] playerOpts={"Friend","AI"};
+	private int play = 2;
+	private int turn;
+	private int playerTurn;
+	private int p2Turn;
+	private int color;
 	private int numPlayers = 1;
-	private int winCounter = 0;
 	private Random rand = new Random();
+
+	
 	
 	private BoardData data;
 	
@@ -26,8 +38,16 @@ public class HexBoard extends JPanel implements IBoard {
 		addMouseListener(new Mouse(this));
 		board=new int[11][11];
 		hexagons = new Polygon[11][11];
-		String[] colorOpts={"Red", "Blue"};
-		String[] playerOpts={"Friend","AI"};
+		data = new BoardData();
+		gameMode();
+		
+	}
+	
+	public void gameMode(){
+		turn = 1;
+		color = 0;
+		playerTurn = 1;
+		p2Turn = 2;
 		numPlayers = JOptionPane.showOptionDialog(null, "Would you like to play against a Friend or an AI?", "Choose players", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playerOpts, playerOpts[0]);
 		if(numPlayers == 1){
 			color=JOptionPane.showOptionDialog(null, "Which color would you like to play as?", "Choose Color", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, colorOpts, colorOpts[0]);
@@ -43,13 +63,8 @@ public class HexBoard extends JPanel implements IBoard {
 		if(numPlayers == 1 && playerTurn == 2){
 			playAt(rand.nextInt(11), rand.nextInt(11));
 		}
+	}
 
-	}
-	
-	public HexBoard(BoardData d) {
-		data = d;
-	}
-	
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		double panelWidth = this.getSize().width;
@@ -139,7 +154,8 @@ public class HexBoard extends JPanel implements IBoard {
 	}
 
 	public void playAt(int x, int y){
-		if (!isLegalPlay(x, y) && turn == playerTurn) {
+		if (!isLegalPlay(x, y) && turn == playerTurn || !isLegalPlay(x, y) && turn == p2Turn ) {
+			JOptionPane.showMessageDialog(null, "Illegal Move! Play at another Location", "Invalid move!", JOptionPane.PLAIN_MESSAGE);
 			return;
 		}
 
@@ -148,19 +164,44 @@ public class HexBoard extends JPanel implements IBoard {
 			x = rand.nextInt(11);
 			y = rand.nextInt(11);
 		}
-
+		
 		board[y][x]=turn;
 		repaint();
 
 
 		if (turn==2) {
+			data.set(x, y, Node.BLUE);
 			turn--;
 			repaint();
 		} else {
+			data.set(x, y, Node.RED);
 			turn++;
 			repaint();
 		}
-		winCounter++;
+
+		try {
+			if(data.checkWin(Player.BLUE)){
+				play = JOptionPane.showOptionDialog(null, "Blue Wins! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
+			}
+			if(data.checkWin(Player.RED)){
+				play = JOptionPane.showOptionDialog(null, "Red Wins! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
+			}
+
+			if(play == 0){
+				play = 2;
+				board = new int[11][11];
+				data = new BoardData();
+				gameMode();
+				repaint();
+			}
+			if(play == 1){
+				System.exit(0);
+			}
+
+		} catch (OperationNotSupportedException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public void update(int x, int y) {
@@ -177,11 +218,6 @@ public class HexBoard extends JPanel implements IBoard {
 			playAt(rand.nextInt(11), rand.nextInt(11));
 		}
 
-		// Should never get to this board but program will run infintely if
-		// not specified to quit if all pieces filled in. 
-		if(winCounter == 121){
-			System.exit(0);
-		}
 	}
 
 	// Checks if space is already taken

@@ -44,9 +44,11 @@ public class BoardData {
 	  }
 	
 	public void initBoard() {
+		int nodeIndex = 4; // 0-3 are taken by borders
 		for (int row = 0; row < SIZE; row++) {
 			for (int column = 0; column < SIZE; column++) {
-				board[column][row].setColor(Node.WHITE);
+				board[column][row] = new HexNode(nodeIndex, Node.WHITE);
+				nodeIndex++;
 			}
 		}
 	}
@@ -229,7 +231,7 @@ public class BoardData {
 	public boolean checkWin(Player player) throws OperationNotSupportedException {
 		switch (player) {
 			case RED:
-				return redAdjMatrix.read(RED_BORDER1,  RED_BORDER2) == AdjMatrix.LINK;
+				return redAdjMatrix.read(RED_BORDER1, RED_BORDER2) == AdjMatrix.LINK;
 			case BLUE:
 				return blueAdjMatrix.read(BLUE_BORDER1,  BLUE_BORDER2) == AdjMatrix.LINK;
 			default:
