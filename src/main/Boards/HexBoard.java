@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import main.GraphicalComponents.Mouse;
 import main.GraphicalComponents.Node;
+import main.LogicalComponents.SFX;
 import main.Players.Player;
 
 public class HexBoard extends JPanel implements IBoard {
@@ -30,6 +31,7 @@ public class HexBoard extends JPanel implements IBoard {
 	private int numPlayers = 1;
 	private Random rand = new Random();	
 	private BoardData data;
+	private SFX sfx = new SFX();
 	
 	public HexBoard() {
 		addMouseListener(new Mouse(this));
@@ -204,6 +206,7 @@ public class HexBoard extends JPanel implements IBoard {
 		for (int column = 0; column < hexagons.length; column++) {
 			for (int row = 0; row < hexagons[column].length; row++) {
 				if (hexagons[column][row].contains(x, y)) {
+					sfx.playTileClick();
 					playAt(column, row);
 				}
 			}
