@@ -4,11 +4,13 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import main.Boards.*;
+import main.LogicalComponents.SFX;
 
 public class GUI extends JFrame implements ActionListener {
 	private JPanel gameSettings;
 	private HexBoard activeGameBoard;
 	private JButton startButton = new JButton("Start Game");
+	private SFX sfx = new SFX();
 	
 	public GUI() {
 		gameSettings = new JPanel();
@@ -35,6 +37,7 @@ public class GUI extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == startButton) {
+			sfx.playButtonClick();
             startGame();
         }
 	}
