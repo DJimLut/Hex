@@ -179,9 +179,11 @@ public class HexBoard extends JPanel implements IBoard {
 
 		try {
 			if(data.checkWin(Player.BLUE)){
+				sfx.playWin();
 				play = JOptionPane.showOptionDialog(null, "Blue Wins! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
 			}
 			if(data.checkWin(Player.RED)){
+				sfx.playWin();
 				play = JOptionPane.showOptionDialog(null, "Red Wins! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
 			}
 
