@@ -4,6 +4,7 @@
 //connected to graphical components through the GameRunner class.
 
 package main.Boards;
+
 import main.GraphicalComponents.*;
 import main.LogicalComponents.Move;
 import main.Players.Player;

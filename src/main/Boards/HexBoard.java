@@ -1,16 +1,16 @@
 package main.Boards;
 
-import main.GraphicalComponents.*;
-import main.Players.Player;
-
-import java.awt.*;
-import java.awt.MultipleGradientPaint.ColorSpaceType;
-
-import javax.naming.OperationNotSupportedException;
-import javax.swing.*;
-
-import java.util.Arrays;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.util.Random;
+import javax.naming.OperationNotSupportedException;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import main.GraphicalComponents.Mouse;
+import main.GraphicalComponents.Node;
+import main.Players.Player;
 
 public class HexBoard extends JPanel implements IBoard {
 	private int boardSize = 11;
@@ -28,10 +28,7 @@ public class HexBoard extends JPanel implements IBoard {
 	private int p2Turn;
 	private int color;
 	private int numPlayers = 1;
-	private Random rand = new Random();
-
-	
-	
+	private Random rand = new Random();	
 	private BoardData data;
 	
 	public HexBoard() {
@@ -39,8 +36,7 @@ public class HexBoard extends JPanel implements IBoard {
 		board=new int[11][11];
 		hexagons = new Polygon[11][11];
 		data = new BoardData();
-		gameMode();
-		
+		gameMode();		
 	}
 	
 	public void gameMode(){
