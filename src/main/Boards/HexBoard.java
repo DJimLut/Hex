@@ -1,6 +1,8 @@
 package main.Boards;
 
 import main.GraphicalComponents.*;
+import main.LogicalComponents.SFX;
+
 import java.awt.*;
 import javax.swing.*;
 import java.util.Random;
@@ -19,6 +21,7 @@ public class HexBoard extends JPanel implements IBoard {
 	private int numPlayers = 1;
 	private int winCounter = 0;
 	private Random rand = new Random();
+	private SFX sfx = new SFX();
 	
 	private BoardData data;
 	
@@ -167,6 +170,7 @@ public class HexBoard extends JPanel implements IBoard {
 		for (int column = 0; column < hexagons.length; column++) {
 			for (int row = 0; row < hexagons[column].length; row++) {
 				if (hexagons[column][row].contains(x, y)) {
+					sfx.playTileClick();
 					playAt(column, row);
 				}
 			}
