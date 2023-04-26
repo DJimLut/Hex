@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import main.Boards.*;
+import main.LogicalComponents.SFX;
 
 public class GUI extends JFrame implements ActionListener {
 	private JPanel gameSettings;
@@ -16,6 +17,7 @@ public class GUI extends JFrame implements ActionListener {
 	private JLabel title = new JLabel("Hex Game", SwingConstants.CENTER);
 	private JLabel subtitle1 = new JLabel("David Jimenez, Dylan Williams, Jay Coughlon, Mason Richardson", SwingConstants.CENTER);
 	private JLabel subtitle2 = new JLabel("CSC445 Game Project, Spring 2023", SwingConstants.CENTER);
+	private SFX sfx = new SFX();
 	
 	public GUI() {
 		gameSettings = new JPanel();
@@ -55,6 +57,7 @@ public class GUI extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == startButton) {
+			sfx.playButtonClick();
             startGame();
         }
 	}
