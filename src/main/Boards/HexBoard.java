@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import main.GraphicalComponents.Mouse;
 import main.GraphicalComponents.Node;
+import main.LogicalComponents.SFX;
 import main.Players.Player;
 
 public class HexBoard extends JPanel implements IBoard {
@@ -30,6 +31,7 @@ public class HexBoard extends JPanel implements IBoard {
 	private int numPlayers = 1;
 	private Random rand = new Random();	
 	private BoardData data;
+	private SFX sfx = new SFX();
 	
 	public HexBoard() {
 		addMouseListener(new Mouse(this));
@@ -45,8 +47,10 @@ public class HexBoard extends JPanel implements IBoard {
 		playerTurn = 1;
 		p2Turn = 2;
 		numPlayers = JOptionPane.showOptionDialog(null, "Would you like to play against a Friend or an AI?", "Choose players", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playerOpts, playerOpts[0]);
+		sfx.playButtonClick();
 		if(numPlayers == 1){
 			color=JOptionPane.showOptionDialog(null, "Which color would you like to play as?", "Choose Color", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, colorOpts, colorOpts[0]);
+			sfx.playButtonClick();
 		}
 	
 		// Set player Color and Turn correctly
@@ -177,9 +181,11 @@ public class HexBoard extends JPanel implements IBoard {
 
 		try {
 			if(data.checkWin(Player.BLUE)){
+				sfx.playWin();
 				play = JOptionPane.showOptionDialog(null, "Blue Wins! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
 			}
 			if(data.checkWin(Player.RED)){
+				sfx.playWin();
 				play = JOptionPane.showOptionDialog(null, "Red Wins! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
 			}
 
@@ -204,6 +210,7 @@ public class HexBoard extends JPanel implements IBoard {
 		for (int column = 0; column < hexagons.length; column++) {
 			for (int row = 0; row < hexagons[column].length; row++) {
 				if (hexagons[column][row].contains(x, y)) {
+					sfx.playTileClick();
 					playAt(column, row);
 				}
 			}
