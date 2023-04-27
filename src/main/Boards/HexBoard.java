@@ -155,10 +155,14 @@ public class HexBoard extends JPanel implements IBoard {
 
 	public void playAt(int x, int y){
 		if (!isLegalPlay(x, y) && turn == playerTurn || !isLegalPlay(x, y) && turn == p2Turn ) {
+			sfx.playWrong();
 			JOptionPane.showMessageDialog(null, "Illegal Move! Play at another Location", "Invalid move!", JOptionPane.PLAIN_MESSAGE);
 			return;
 		}
-
+		if(turn == playerTurn || turn == p2Turn){
+			sfx.playTileClick();
+		}
+		
 		// AI picks a hex space already occupied
 		while(board[y][x] != 0){
 			x = rand.nextInt(11);
@@ -181,12 +185,32 @@ public class HexBoard extends JPanel implements IBoard {
 
 		try {
 			if(data.checkWin(Player.BLUE)){
-				sfx.playWin();
-				play = JOptionPane.showOptionDialog(null, "Blue Wins! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
+				if(numPlayers == 0){
+					sfx.playWin();
+					play = JOptionPane.showOptionDialog(null, "Blue Wins! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
+				}
+				else if(numPlayers == 1 && turn == playerTurn - 1 || numPlayers == 1 && turn == p2Turn - 1 ){
+					sfx.playWin();
+					play = JOptionPane.showOptionDialog(null, "You Win! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
+				}
+				else{
+					sfx.playLose();
+					play = JOptionPane.showOptionDialog(null, "You Lost! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]);
+				}
 			}
 			if(data.checkWin(Player.RED)){
-				sfx.playWin();
-				play = JOptionPane.showOptionDialog(null, "Red Wins! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
+				if(numPlayers == 0){
+					sfx.playWin();
+					play = JOptionPane.showOptionDialog(null, "Red Wins! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
+				}
+				else if(numPlayers == 1 && turn == playerTurn + 1 || numPlayers == 1 && turn == p2Turn + 1){
+					sfx.playWin();
+					play = JOptionPane.showOptionDialog(null, "You Win! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
+				}
+				else{
+					sfx.playLose();
+					play = JOptionPane.showOptionDialog(null, "You Lost! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]);
+				}
 			}
 
 			if(play == 0){
@@ -210,7 +234,7 @@ public class HexBoard extends JPanel implements IBoard {
 		for (int column = 0; column < hexagons.length; column++) {
 			for (int row = 0; row < hexagons[column].length; row++) {
 				if (hexagons[column][row].contains(x, y)) {
-					sfx.playTileClick();
+					
 					playAt(column, row);
 				}
 			}

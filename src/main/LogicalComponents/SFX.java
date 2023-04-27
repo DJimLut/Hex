@@ -63,4 +63,17 @@ public class SFX {
             ex.printStackTrace(System.out);
         }
     }
+
+    public void playWrong() {
+        filePath = "audio_files\\wrong.wav";
+        File file = new File(filePath);
+        try{
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(file));
+            clip.start();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace(System.out);
+        }
+    }
 }
