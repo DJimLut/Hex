@@ -185,12 +185,32 @@ public class HexBoard extends JPanel implements IBoard {
 
 		try {
 			if(data.checkWin(Player.BLUE)){
-				sfx.playWin();
-				play = JOptionPane.showOptionDialog(null, "Blue Wins! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
+				if(numPlayers == 0){
+					sfx.playWin();
+					play = JOptionPane.showOptionDialog(null, "Blue Wins! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
+				}
+				else if(numPlayers == 1 && turn == playerTurn - 1 || numPlayers == 1 && turn == p2Turn - 1 ){
+					sfx.playWin();
+					play = JOptionPane.showOptionDialog(null, "You Win! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
+				}
+				else{
+					sfx.playLose();
+					play = JOptionPane.showOptionDialog(null, "You Lost! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]);
+				}
 			}
 			if(data.checkWin(Player.RED)){
-				sfx.playWin();
-				play = JOptionPane.showOptionDialog(null, "Red Wins! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
+				if(numPlayers == 0){
+					sfx.playWin();
+					play = JOptionPane.showOptionDialog(null, "Red Wins! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
+				}
+				else if(numPlayers == 1 && turn == playerTurn + 1 || numPlayers == 1 && turn == p2Turn + 1){
+					sfx.playWin();
+					play = JOptionPane.showOptionDialog(null, "You Win! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]); 
+				}
+				else{
+					sfx.playLose();
+					play = JOptionPane.showOptionDialog(null, "You Lost! Would you like to play again?", "Game Over!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, playAgain, playAgain[0]);
+				}
 			}
 
 			if(play == 0){
