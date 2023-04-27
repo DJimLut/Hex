@@ -155,10 +155,14 @@ public class HexBoard extends JPanel implements IBoard {
 
 	public void playAt(int x, int y){
 		if (!isLegalPlay(x, y) && turn == playerTurn || !isLegalPlay(x, y) && turn == p2Turn ) {
+			sfx.playWrong();
 			JOptionPane.showMessageDialog(null, "Illegal Move! Play at another Location", "Invalid move!", JOptionPane.PLAIN_MESSAGE);
 			return;
 		}
-
+		if(turn == playerTurn || turn == p2Turn){
+			sfx.playTileClick();
+		}
+		
 		// AI picks a hex space already occupied
 		while(board[y][x] != 0){
 			x = rand.nextInt(11);
@@ -210,7 +214,7 @@ public class HexBoard extends JPanel implements IBoard {
 		for (int column = 0; column < hexagons.length; column++) {
 			for (int row = 0; row < hexagons[column].length; row++) {
 				if (hexagons[column][row].contains(x, y)) {
-					sfx.playTileClick();
+					
 					playAt(column, row);
 				}
 			}
