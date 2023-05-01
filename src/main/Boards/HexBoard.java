@@ -77,6 +77,8 @@ public class HexBoard extends JPanel implements IBoard {
 	    
 		drawBorders(g2d);
 		
+		drawTurn(g2d);
+		
 		g2d.setColor(Color.BLACK);
 		
 		for (int y = 0; y < boardSize; y++) {
