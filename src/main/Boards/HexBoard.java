@@ -73,8 +73,11 @@ public class HexBoard extends JPanel implements IBoard {
 	    double dim2 = panelHeight / (4 + 3 * (boardSize - 1));
 	    this.sm = Math.min(dim1, dim2);
 	    this.lg = 2 * sm;
+
 	    
 		drawBorders(g2d);
+		
+		drawTurn(g2d);
 		
 		g2d.setColor(Color.BLACK);
 		
@@ -86,6 +89,20 @@ public class HexBoard extends JPanel implements IBoard {
 		}		
 	}
 	
+	public void drawTurn(Graphics2D g){
+		Polygon polygon = calcHexPoly(13, 2);
+		if(turn == 2){
+			g.setPaint(Color.BLUE);
+			g.fill(polygon);
+		}
+		else{
+			g.setPaint(Color.RED);
+			g.fill(polygon);
+		}
+		g.setPaint(Color.BLACK);
+		g.draw(polygon);
+	}
+
 	public void drawHex(Graphics2D g, int column, int row) {
 		Polygon polygon = calcHexPoly(column, row);
 	    g.setPaint(getFillColor(column, row));
@@ -156,7 +173,6 @@ public class HexBoard extends JPanel implements IBoard {
 	public void playAt(int x, int y){
 		if (!isLegalPlay(x, y) && turn == playerTurn || !isLegalPlay(x, y) && turn == p2Turn ) {
 			sfx.playWrong();
-			JOptionPane.showMessageDialog(null, "Illegal Move! Play at another Location", "Invalid move!", JOptionPane.PLAIN_MESSAGE);
 			return;
 		}
 		if(turn == playerTurn || turn == p2Turn){
